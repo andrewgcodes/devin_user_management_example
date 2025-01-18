@@ -26,7 +26,20 @@ def create_user(prefix="user", roles=None, existing_users=None):
     existing_users.append(user)
     return user
 
-def batch_create_users(prefix="user", roles=None, count=5, existing_users=[]):
+def batch_create_users(prefix="user", roles=None, count=5, existing_users=None):
+    """Create multiple users with the same prefix and roles.
+    
+    Args:
+        prefix (str): Prefix for usernames
+        roles (list): List of roles to assign
+        count (int): Number of users to create
+        existing_users (list): List to append new users to
+    
+    Returns:
+        list: List of newly created users
+    """
+    if existing_users is None:
+        existing_users = []
     new_users = []
     for _ in range(count):
         user = create_user(prefix=prefix, roles=roles, existing_users=existing_users)
@@ -35,16 +48,13 @@ def batch_create_users(prefix="user", roles=None, count=5, existing_users=[]):
 
 def main():
     user_list = []
-
     first = create_user(prefix="admin", roles=["admin"], existing_users=user_list)
     second = create_user(prefix="admin", roles=["user"], existing_users=user_list)
-
-    batch1 = batch_create_users(prefix="guest", roles=["guest"], count=3)
-    batch2 = batch_create_users(prefix="guest", roles=["guest"], count=2)
-
-    print("Single users:", [u.username for u in user_list])
-    print("Batch1 users:", [u.username for u in batch1])
-    print("Batch2 users:", [u.username for u in batch2])
+    
+    batch1 = batch_create_users(prefix="guest", roles=["guest"], count=3, existing_users=user_list)
+    batch2 = batch_create_users(prefix="guest", roles=["guest"], count=2, existing_users=user_list)
+    
+    print("All users:", [u.username for u in user_list])
 
 if __name__ == "__main__":
     main()
